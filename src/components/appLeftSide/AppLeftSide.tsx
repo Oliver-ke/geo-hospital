@@ -9,7 +9,7 @@ import getUserLocation from '../../utils/getUserLocation';
 import './appLeftSide.styles.scss';
 
 type keyType = string | any;
-const key: keyType = process.env.REACT_APP_GOOGLE_MAP
+const key: keyType = process.env.REACT_APP_GOOGLE_MAP;
 
 const AppLeftSide: FC = (): ReactElement => {
   const [query, setQuery] = useState<null | String>(null);
@@ -24,17 +24,15 @@ const AppLeftSide: FC = (): ReactElement => {
         if (!query || query.trim() === "") {
           return setResult(null);
         }
-        console.log("fired");
-        const { lat, lng } = await getUserLocation();
         setLoading(true);
-        const passCors: string = 'https://oke-cors.herokuapp.com/';
-        const baseUri: string = 'https://maps.googleapis.com/maps/api/place/textsearch/json';
-        const queryParams: string = encodeURI(`?query=${query}&radius=${radius}&location=${lat},${lng}&type=hospital`);
-        const uri: string = `${passCors}${baseUri}${queryParams}&key=${key}`;
+        const { lat, lng } = await getUserLocation();
+        const corsProxy = "https://oke-cors.herokuapp.com/"
+        const baseUri: string = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
+        const queryParams: string = encodeURI(`?keyword=${query}&radius=${radius}&location=${lat},${lng}&type=hospital`);
+        const uri: string = `${corsProxy}${baseUri}${queryParams}&key=${key}`;
         const res = await fetch(uri);
         const data = await res.json();
         setResult(data.results);
-        console.log(data);
         setLoading(false);
       } catch (error) {
         console.error(error);
@@ -43,7 +41,7 @@ const AppLeftSide: FC = (): ReactElement => {
     })();
   }, [query, radius])
   return (
-    <Col span={6} className="app-left-side">
+    <Col xs={{ span: 19 }} md={{ span: 6 }} className="app-left-side">
       <AppHeader />
       <RadiusSlider updateSlider={setRadius} />
       <SearchInput updateSearchQuery={setQuery} />

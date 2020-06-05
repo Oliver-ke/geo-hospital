@@ -1,5 +1,5 @@
 import React, { FC, ReactElement, useContext } from 'react';
-import { LocationContex } from '../../context/locationContext';
+import { locationContext } from '../../context/locationContext';
 import hospitalImg from '../../assets/hospital.png'
 
 import './card.styles.scss';
@@ -13,7 +13,7 @@ type geometryType = {
 }
 type hospitalType = {
   name: string,
-  formatted_address: string,
+  vicinity: string,
   geometry: geometryType
 }
 interface Icard {
@@ -21,9 +21,9 @@ interface Icard {
 }
 
 const Card: FC<Icard> = ({ hospital }): ReactElement => {
-  const { dispatch, state } = useContext(LocationContex)
+  const { dispatch, state } = useContext(locationContext)
   const { lat } = state;
-  const { name, formatted_address, geometry: { location } } = hospital;
+  const { name, vicinity, geometry: { location } } = hospital;
   return (
     <div
       onClick={() => dispatch({ type: "CARD_SELECTED", payload: { ...location, name } })}
@@ -32,7 +32,7 @@ const Card: FC<Icard> = ({ hospital }): ReactElement => {
       <img src={hospitalImg} alt="icon" />
       <div className="place-detail">
         <h3>{name}</h3>
-        <p>{formatted_address}</p>
+        <p>{vicinity}</p>
       </div>
     </div>
   )

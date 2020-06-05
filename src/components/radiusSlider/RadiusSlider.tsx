@@ -7,7 +7,7 @@ interface Islider {
   updateSlider: Function
 }
 const RadiusSlider: FC<Islider> = ({ updateSlider }): ReactElement => {
-  const [sliderValue, setSliderValue] = useState(37);
+  const [sliderValue, setSliderValue] = useState(25);
   const onSliderChange = (e: any) => {
     const radiusInMeters = e * 1000;
     setSliderValue(e);
@@ -29,7 +29,14 @@ const RadiusSlider: FC<Islider> = ({ updateSlider }): ReactElement => {
   return (
     <div className="slider-wrapper">
       <h4> Pick a geo-fencing radius</h4>
-      <Slider min={5} max={50} onChange={onSliderChange} marks={marks} value={sliderValue} />
+      <Slider
+        min={5}
+        max={50}
+        className="slider"
+        onChange={onSliderChange}
+        marks={marks}
+        value={sliderValue}
+      />
     </div>
   )
 }
