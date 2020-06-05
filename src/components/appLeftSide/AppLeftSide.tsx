@@ -27,8 +27,8 @@ const AppLeftSide: FC = (): ReactElement => {
         setLoading(true);
         const { lat, lng } = await getUserLocation();
         const corsProxy = "https://oke-cors.herokuapp.com/"
-        const baseUri: string = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
-        const queryParams: string = encodeURI(`?keyword=${query}&radius=${radius}&location=${lat},${lng}&type=hospital`);
+        const baseUri: string = 'https://maps.googleapis.com/maps/api/place/textsearch/json';
+        const queryParams: string = encodeURI(`?query=${query}&location=${lat},${lng}&radius=${radius}&type=hospital`);
         const uri: string = `${corsProxy}${baseUri}${queryParams}&key=${key}`;
         const res = await fetch(uri);
         const data = await res.json();
