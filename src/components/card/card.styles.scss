@@ -1,0 +1,31 @@
+
+.card{
+  width: 100%;
+  border-radius: 7px;
+  min-height: 70px;
+  border: 1px solid #cccccc;
+  margin: 0.5rem 0;
+  background-color: #ffffff;
+  padding: 0.7rem;
+  display: flex;
+  align-items: center;
+  &.active{
+    border: 1px solid #95CBFF;
+  }
+  img{
+    width: 10%;
+  }
+  .place-detail{
+    margin-left: 10px;
+    h3,p{
+      margin: 0;
+    }
+    p{
+      font-size: 11px;
+    }
+  }
+  &:hover{
+    cursor: pointer;
+    border: 1px solid #95CBFF;
+  }
+}

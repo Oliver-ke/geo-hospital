@@ -1,0 +1,22 @@
+
+
+.marker{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  .description{
+    background-color: #ffffff;
+    min-width: 100px;
+    padding: 0.5rem 0.3rem;
+    border-radius: 5px;
+    text-align: center;
+    border: 1px solid #eb2f96;
+    h4{
+      vertical-align: middle;
+    }
+  }
+  img{
+    width: 40px;
+  }
+}

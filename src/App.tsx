@@ -1,25 +1,19 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useReducer } from 'react';
+import AppLeftSide from './components/appLeftSide/AppLeftSide';
+import AppRightSide from './components/appRightSide/AppRightSide';
+import { Row } from 'antd';
+import { LocationContex, reducer, initialState } from './context/locationContext';
+import './App.scss';
 
-function App() {
+const App = () => {
+  const [state, dispatch] = useReducer(reducer, initialState);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Row className="App">
+      <LocationContex.Provider value={{ state, dispatch }}>
+        <AppLeftSide />
+        <AppRightSide />
+      </LocationContex.Provider>
+    </Row>
   );
 }
 
