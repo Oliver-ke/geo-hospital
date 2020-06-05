@@ -1,5 +1,5 @@
 import React, { FC, ReactElement, useState, useContext, useEffect } from 'react';
-import { LocationContex } from '../../context/locationContext';
+import { locationContext } from '../../context/locationContext';
 import GoogleMapReact from 'google-map-react';
 import Marker from './Marker';
 
@@ -9,7 +9,7 @@ type keyType = string | any;
 const key: keyType = process.env.REACT_APP_GOOGLE_MAP;
 
 const Map: FC = (): ReactElement => {
-  const { state } = useContext(LocationContex);
+  const { state } = useContext(locationContext);
   const [center, setCenter] = useState({ lng: 3.5105, lat: 6.6194 });
   const [zoom, setZoom] = useState(13);
   const { lat, lng, name } = state;
@@ -26,7 +26,6 @@ const Map: FC = (): ReactElement => {
         bootstrapURLKeys={{ key: key }}
         zoom={zoom}
         center={center}
-        defaultCenter={{ lng: 3.5105, lat: 6.6194 }}
       >
         {state.lng && (
           <Marker
