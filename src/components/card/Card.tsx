@@ -14,7 +14,8 @@ type geometryType = {
 type hospitalType = {
   name: string,
   formatted_address: string,
-  geometry: geometryType
+  geometry: geometryType,
+  vicinity: string | undefined
 }
 interface Icard {
   hospital: hospitalType
@@ -23,7 +24,7 @@ interface Icard {
 const Card: FC<Icard> = ({ hospital }): ReactElement => {
   const { dispatch, state } = useContext(locationContext)
   const { lat } = state;
-  const { name, formatted_address, geometry: { location } } = hospital;
+  const { name, formatted_address, vicinity, geometry: { location } } = hospital;
   return (
     <div
       onClick={() => dispatch({ type: "CARD_SELECTED", payload: { ...location, name } })}
@@ -32,7 +33,7 @@ const Card: FC<Icard> = ({ hospital }): ReactElement => {
       <img src={hospitalImg} alt="icon" />
       <div className="place-detail">
         <h3>{name}</h3>
-        <p>{formatted_address}</p>
+        <p>{formatted_address ? formatted_address : vicinity}</p>
       </div>
     </div>
   )

@@ -10,12 +10,15 @@ const key: keyType = process.env.REACT_APP_GOOGLE_MAP;
 
 const Map: FC = (): ReactElement => {
   const { state } = useContext(locationContext);
-  const [center, setCenter] = useState({ lng: 3.5105, lat: 6.6194 });
-  const [zoom, setZoom] = useState(13);
   const { lat, lng, name } = state;
+  const [center, setCenter] = useState({ lng, lat });
+  const [zoom, setZoom] = useState(13);
   useEffect(() => {
     if (lat && lng) {
       setZoom(15);
+      if (name === 'Your current location from IP') {
+        setZoom(8);
+      }
       return setCenter({ lat, lng });
     }
   }, [lat, lng]);

@@ -17,7 +17,7 @@ const SearchResult: FC<Iresult> = ({ results, loading, }): ReactElement => {
         <Card key={result.id} hospital={result} />
       )) : results?.length === 0 ? (
         <div className="no-search">
-          <h4>No hospital found</h4>
+          <h4>No data found</h4>
           <CloudDownloadOutlined style={{ fontSize: "30px" }} />
         </div>
       ) : null

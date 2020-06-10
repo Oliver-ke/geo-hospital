@@ -4,9 +4,10 @@ import { Input } from 'antd';
 import './searchInput.styles.scss';
 
 interface searchInpute {
-  updateSearchQuery: Function
+  updateSearchQuery: Function,
+  inputVal: string
 }
-const SearchInput: FC<searchInpute> = ({ updateSearchQuery }): ReactElement => {
+const SearchInput: FC<searchInpute> = ({ updateSearchQuery, inputVal: parentInput }): ReactElement => {
   const { Search } = Input;
   const [inputText, setInputText] = useState("");
   const handleOnchange = (e: any) => {
@@ -22,7 +23,7 @@ const SearchInput: FC<searchInpute> = ({ updateSearchQuery }): ReactElement => {
         onChange={handleOnchange}
         className="search-input"
         placeholder="Search hospital"
-        value={inputText}
+        value={parentInput !== "" ? parentInput : inputText}
       />
     </div>
   )
