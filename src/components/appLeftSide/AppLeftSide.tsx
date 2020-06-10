@@ -4,18 +4,23 @@ import AppHeader from '../header/Header';
 import SearchInput from '../searchInput/SearchInput';
 import RadiusSlider from '../radiusSlider/RadiusSlider';
 import SearchResult from '../searResult/SearchResult';
-import getUserLocation from '../../utils/getUserLocation';
+import request from '../../utils/request';
+import PrevSearch from '../prevSearch/PrevSearch';
+import { useDebounce } from '../../custom-hooks/useDebounce';
+import { cacheUserSearch } from '../../utils/firebase.util';
+import { getUserId } from '../../utils/idManager';
 
 import './appLeftSide.styles.scss';
 
-type keyType = string | any;
-const key: keyType = process.env.REACT_APP_GOOGLE_MAP;
+
+const userId = getUserId();
 
 const AppLeftSide: FC = (): ReactElement => {
-  const [query, setQuery] = useState<null | String>(null);
   const [result, setResult] = useState<null | object[]>(null);
   const [radius, setRadius] = useState<null | number>(null);
   const [loading, setLoading] = useState(false);
+  const [inputVal, setInputVal] = useState("");
+  const [query, setQuery, { signal }] = useDebounce('');
 
   useEffect(() => {
     // fire api call on search change
@@ -24,27 +29,40 @@ const AppLeftSide: FC = (): ReactElement => {
         if (!query || query.trim() === "") {
           return setResult(null);
         }
+        // clear innitial inout for new query
+        if (inputVal !== "") setInputVal("");
         setLoading(true);
-        const { lat, lng } = await getUserLocation();
-        const corsProxy = "https://oke-cors.herokuapp.com/"
-        const baseUri: string = 'https://maps.googleapis.com/maps/api/place/textsearch/json';
-        const queryParams: string = encodeURI(`?query=${query}&location=${lat},${lng}&radius=${radius}&type=hospital`);
-        const uri: string = `${corsProxy}${baseUri}${queryParams}&key=${key}`;
-        const res = await fetch(uri);
-        const data = await res.json();
+        const data = await request(query, radius);
         setResult(data.results);
+
+        //cache query
+        await cacheUserSearch(query, userId);
         setLoading(false);
       } catch (error) {
         console.error(error);
         alert("Filed to make request");
       }
     })();
-  }, [query, radius])
+  }, [signal])
+
+  const onPriveQueryClick = async (query: string) => {
+    try {
+      setLoading(true);
+      setInputVal(query);
+      const data = await request(query, radius);
+      setResult(data.results);
+      setLoading(false);
+    } catch (error) {
+      console.log("Failed to make request")
+    }
+  }
+
   return (
     <Col xs={{ span: 19 }} md={{ span: 6 }} className="app-left-side">
       <AppHeader />
       <RadiusSlider updateSlider={setRadius} />
-      <SearchInput updateSearchQuery={setQuery} />
+      <SearchInput inputVal={inputVal} updateSearchQuery={setQuery} />
+      <PrevSearch onPriveQueryClick={onPriveQueryClick} />
       <SearchResult loading={loading} results={result} />
     </Col>
   )
