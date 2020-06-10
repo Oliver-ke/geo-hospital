@@ -11,9 +11,12 @@ const AppRightSide: FC = (): ReactElement => {
 
   useEffect(() => {
     (async () => {
-      const location = await getUserLocation();
-      console.log(location)
-      dispatch({ type: "SET_USER_LOCATION", payload: location });
+      try {
+        const location = await getUserLocation();
+        dispatch({ type: "SET_USER_LOCATION", payload: location });
+      } catch (error) {
+        alert("Get current location error, try using a Chrome browser")
+      }
     })()
   }, []);
 
