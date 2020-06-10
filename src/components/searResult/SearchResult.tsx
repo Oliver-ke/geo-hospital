@@ -30,7 +30,7 @@ const SearchResult: FC<Iresult> = ({ results, loading, }): ReactElement => {
       )}
       {results === null && !loading && (
         <div className="no-search">
-          <h4>Enter a search query to for hospitals</h4>
+          <h4>Search for hospitals, clinics, pharmacies, etc</h4>
           <AimOutlined style={{ fontSize: "30px" }} />
         </div>
       )}

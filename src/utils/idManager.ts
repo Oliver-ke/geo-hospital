@@ -5,14 +5,15 @@ export const setUserIdIfNotExist = () => {
   if (!idExist) {
     const newId = JSON.stringify(uuidv4());
     localStorage.setItem("geoUserId", newId);
+    return newId;
   }
-  return;
+  return idExist;
 }
 
 export const getUserId = () => {
   const id: string | null = localStorage.getItem("geoUserId");
   if (!id) {
-    throw new Error("User id was never set");
+    return setUserIdIfNotExist();
   }
   return id;
 }
