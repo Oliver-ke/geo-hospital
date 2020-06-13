@@ -2,4 +2,24 @@
 .app-right-side{
   background-color: #cccccc;
   border-left: 2px solid #ffffff;
+  position: relative;
+  .logout-btn-container{
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    .logout-btn{
+      padding: 0.6rem 1rem;
+      height: auto;
+      border-radius: 5px;
+      transition: 0.8s all ease-out;
+      span.email {
+        display: none;
+      }
+      &:hover{
+        span.email {
+          display: unset;
+        }
+      }
+    }
+  }
 }
