@@ -1,25 +1,28 @@
-import React, { useReducer, useEffect } from 'react';
-import AppLeftSide from './components/appLeftSide/AppLeftSide';
-import AppRightSide from './components/appRightSide/AppRightSide';
-import { Row } from 'antd';
-import { locationContext, reducer, initialState } from './context/locationContext';
-import { setUserIdIfNotExist } from './utils/idManager';
+import React from 'react';
+import { Router, Route, Switch } from "react-router-dom";
+import PrivateRoute from './components/privateRoute/PrivateRoute';
+import LandingPage from './pages/Landing/LandingPage';
+import AppMainPage from './pages/app/AppMainPage';
+import Loading from './components/loading/Loading';
+import { useAuth0 } from './context/authContext'
+import history from './utils/history';
 import './App.scss';
 
 const App = () => {
-  const [state, dispatch] = useReducer(reducer, initialState);
-
-  useEffect(() => {
-    setUserIdIfNotExist()
-  }, [])
-
+  const { loading, user } = useAuth0();
+  if (loading) {
+    if (user && user.email) {
+      localStorage.setItem('x_user', user.email)
+    }
+    return <Loading />
+  }
   return (
-    <Row className="App">
-      <locationContext.Provider value={{ state, dispatch }}>
-        <AppLeftSide />
-        <AppRightSide />
-      </locationContext.Provider>
-    </Row>
+    <Router history={history}>
+      <Switch>
+        <Route path="/" exact component={LandingPage} />
+        <PrivateRoute path="/app" component={AppMainPage} />
+      </Switch>
+    </Router>
   );
 }
 
