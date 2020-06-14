@@ -1,32 +1,46 @@
-import React, { FC, ReactElement, useState, useEffect } from 'react';
+import React, { FC, ReactElement, useState, useEffect, Fragment } from 'react';
 import { Button } from 'antd';
 import { DownOutlined, UpOutlined } from '@ant-design/icons'
-import { firestore } from '../../utils/firebase.util';
-import { getUserId } from '../../utils/idManager';
+import gql from 'graphql-tag';
+import { useQuery } from '@apollo/react-hooks';
 
 import './prevSearch.styles.scss';
-const userId = getUserId();
+
+const GET_USER_HISTORY = gql`
+  query gethistory{
+    userHistory{
+      query
+      results{
+        name
+        address
+        location{
+          lng
+          lat
+        }
+      }
+    }
+  }
+`
 type prevSearchType = {
   onPriveQueryClick: Function
 }
+
 const PrevSearch: FC<prevSearchType> = ({ onPriveQueryClick }): ReactElement => {
   const [showDropDown, setSHowDropDown] = useState(false);
   const [prevSearch, setPreSearch] = useState<any>([]);
+  const { loading, error, data } = useQuery(GET_USER_HISTORY, {
+    pollInterval: 500
+  });
 
   useEffect(() => {
-    firestore.collection(`${userId}`)
-      .onSnapshot({ includeMetadataChanges: true }, (querySnapshot) => {
-        let searches: object[] = []
-        querySnapshot.forEach((doc) => {
-          searches.push(doc.data());
-        });
-        if (searches.length > 0) setPreSearch(searches);
-      })
-  }, [])
+    if (data && data.userHistory) {
+      setPreSearch(data.userHistory)
+    }
+  }, [data])
 
-  const handlePrevQueryClick = (query: string) => {
+  const handlePrevQueryClick = (query: string, results: object[]) => {
     setSHowDropDown(false);
-    onPriveQueryClick(query)
+    onPriveQueryClick(query, results)
   }
 
   return (
@@ -39,14 +53,30 @@ const PrevSearch: FC<prevSearchType> = ({ onPriveQueryClick }): ReactElement => 
       </Button>
       {showDropDown && (
         <div className="searches">
-          {prevSearch.map(({ query }: { query: string }, idx: number) => (
-            <div onClick={() => handlePrevQueryClick(query)} key={idx} className="search">
-              <h3>{query}</h3>
-            </div>
-          ))}
-          {prevSearch.length === 0 && (
+          {
+            loading ? (
+              <div>
+                <h4>Loading...</h4>
+              </div>
+            ) : (
+                <Fragment>
+                  {prevSearch.map(
+                    ({ query, results }: { query: string, results: object[] }, idx: number) => (
+                      <div
+                        onClick={() => handlePrevQueryClick(query, results)}
+                        key={idx} className="search"
+                      >
+                        <h3>{query}</h3>
+                      </div>
+                    ))}
+                </Fragment>
+              )
+          }
+          {prevSearch.length === 0 && !loading && (
             <div>
-              <h4>No search History yet!</h4>
+              {!error ? (<h4>No search History yet!</h4>) : (
+                <h4>Error fetching search history</h4>
+              )}
             </div>
           )}
         </div>

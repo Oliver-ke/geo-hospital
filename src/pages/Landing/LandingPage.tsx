@@ -23,7 +23,7 @@ const LandingPage: FC<ILandingPage> = ({ history }): ReactElement => {
       <div className="content">
         <img src={appLogo} alt="logo" />
         <h3>Welcome!</h3>
-        <h4>Authentication required please proceed for authentication</h4>
+        <h4>Authentication required, please Authenticate</h4>
         <Button onClick={() => loginWithRedirect()} className="auth-btn">
           Proceed to Authorization page
         </Button>

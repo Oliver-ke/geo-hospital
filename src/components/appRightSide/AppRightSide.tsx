@@ -25,7 +25,7 @@ const AppRightSide: FC = (): ReactElement => {
 
   return (
     <Col className="app-right-side" xs={{ span: 5 }} md={{ span: 18 }}>
-      {/* <Map /> */}
+      <Map />
       <div className="logout-btn-container">
         <Button onClick={() => logout()} icon={<LogoutOutlined />} className="logout-btn">
           Log out <span className="email"> - {user.email}</span>

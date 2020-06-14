@@ -6,11 +6,22 @@ import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from '@apollo/react-hooks';
 import App from './App';
 
+import './index.scss';
+
 const DOMAIN: string = process.env.REACT_APP_DOMAIN || "";
 const CLIENT_ID: string = process.env.REACT_APP_CLIENT_ID || "";
 
+// create a client also check localstorage for the givin user
 const client = new ApolloClient({
   uri: 'https://geohospital-api.herokuapp.com',
+  request: (operation: { setContext: Function }) => {
+    const x_user = localStorage.getItem("x_user");
+    if (x_user) {
+      operation.setContext({
+        headers: { x_user }
+      })
+    }
+  }
 });
 
 // A function that routes the user to the right place
@@ -23,7 +34,6 @@ const onRedirectCallback = (appState: any) => {
   );
 };
 
-import './index.scss';
 ReactDOM.render(
   <ApolloProvider client={client}>
     <Auth0Provider
