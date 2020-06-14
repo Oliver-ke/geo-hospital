@@ -11,6 +11,9 @@
 - Firebase
 - GraphQL
 
+### GraphQL service repository
+[https://github.com/Oliver-ke/geo-hospital-graphql-api](https://github.com/Oliver-ke/geo-hospital-graphql-api)
+
 #### Project live url
 [geohospital1.web.app](https://geohospital1.web.app/)
 
