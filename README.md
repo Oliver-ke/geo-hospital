@@ -4,6 +4,9 @@
 ### App structure
 ![structure](https://res.cloudinary.com/oliver-k/image/upload/v1592162750/app-structure.png)
 
+### App
+![App Screenshot](https://res.cloudinary.com/oliver-k/image/upload/v1592697562/app.png)
+
 #### Tech stacks used
 - React
 - TypeScript
