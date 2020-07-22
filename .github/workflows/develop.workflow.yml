@@ -1,0 +1,45 @@
+name: CI/CD
+
+on:
+  push:
+    branches: 
+      - develop
+      - master
+  pull_request:
+    branches: 
+      - develop
+      - master
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Run the tests
+      run: npm test
+
+    - name: Build
+      run: npm run build
+
+    - name: Deploy to firebase
+      uses: lowply/deploy-firebase@v0.0.4
+      env:
+        FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        FIREBASE_PROJECT: geohospital1
+        TARGET_BRANCH: develop
