@@ -66,10 +66,13 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+      
     - name: install dep
       run: npm install
     - name: run build
       run: npm run build
+    - env:
+        CI: ""
         
    Deploy:
     name: Deploy to firebase
