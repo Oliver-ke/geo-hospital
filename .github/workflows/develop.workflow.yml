@@ -4,6 +4,9 @@ name: Frontend project actions
 
 on:
   push:
+    branches: 
+      - master
+      - develop
   pull_request:
     branches: 
       - master
@@ -67,7 +70,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
       
-    - name: install dep
+    - name: install dependencies
       run: npm install
     - name: run build
       run: npm run build
