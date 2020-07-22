@@ -1,17 +1,18 @@
-
-
-name: Frontend project actions
+name: CI/CD
 
 on:
   push:
+    branches: 
+      - develop
+      - master
   pull_request:
     branches: 
-      - master
       - develop
+      - master
 
 jobs:
-   lint: 
-    name: audit code style
+  build:
+
     runs-on: ubuntu-latest
 
     strategy:
@@ -19,65 +20,26 @@ jobs:
         node-version: [12.x]
 
     steps:
-    - name: Checkout Repo
+    - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Prepare Node
+    - name: Set up Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
 
-    - name: Install Deps
+    - name: Install dependencies
       run: npm install
-        
-    - name: Run Audits
-      run: npm run lint
-         
-   Test:
-    name: Running unit Tests
-    runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [10.x, 12.x]
+    - name: Run the tests
+      run: npm test
 
-    steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - name: install dep
-      run: npm install
-    - name: run test
-      run: npm run test
-   
-   Build:
-    name: Building project
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [10.x, 12.x]
-
-    steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-      
-    - name: install dependencies
-      run: npm install
-    - name: run build
+    - name: Build
       run: npm run build
-        
-   Deploy:
-    name: Deploy to firebase
-    runs-on: ubuntu-latest
-    steps:
-     - env:
+
+    - name: Deploy to firebase
+      uses: lowply/deploy-firebase@v0.0.4
+      env:
         FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
         FIREBASE_PROJECT: geohospital1
         TARGET_BRANCH: develop
-     - uses: lowply/deploy-firebase@v0.0.4
