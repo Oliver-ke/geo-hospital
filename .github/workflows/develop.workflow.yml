@@ -1,36 +1,82 @@
 
-name: Test, Build, Deploy
+
+name: Frontend project actions
 
 on:
   push:
-    branches: [ develop ]
   pull_request:
-    branches: [ develop ]
+    branches: 
+      - master
+      - develop
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  build:
-
+   lint: 
+    name: audit code style
     runs-on: ubuntu-latest
-    
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+
     steps:
+    - name: Checkout Repo
+      uses: actions/checkout@v2
 
-    - uses: actions/checkout@v2
-
-    - name: Build and test project
+    - name: Prepare Node
       uses: actions/setup-node@v1
       with:
-        node-version: '12.x'
-    - run: npm install
-    - run: npm run build --if-present
-    - run: npm test
-      env:
-        CI: true
+        node-version: ${{ matrix.node-version }}
 
+    - name: Install Deps
+      run: npm install
+        
+    - name: Run Audits
+      run: npm run lint
+         
+   Test:
+    name: Running unit Tests
+    runs-on: ubuntu-latest
 
-    - name: Deploy to Firebase
-      env:
+    strategy:
+      matrix:
+        node-version: [10.x, 12.x]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: install dep
+      run: npm install
+    - name: run test
+      run: npm run test
+   
+   Build:
+    name: Building project
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [10.x, 12.x]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: install dep
+      run: npm install
+    - name: run build
+      run: npm run build
+        
+   Deploy:
+    name: Deploy to firebase
+    runs-on: ubuntu-latest
+    steps:
+     - env:
         FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
         FIREBASE_PROJECT: geohospital1
         TARGET_BRANCH: develop
-      uses: lowply/deploy-firebase@v0.0.4
+     - uses: lowply/deploy-firebase@v0.0.4
